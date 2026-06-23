@@ -8,7 +8,7 @@ parameters:
     level: 2
     paths:
         - %currentWorkingDirectory%/src/
-    excludes_analyse:
+    excludePaths:
         - %currentWorkingDirectory%/src/Page/views
         - %currentWorkingDirectory%/src/Core/Exceptions/views
         - %currentWorkingDirectory%/src/Taxonomy/views
