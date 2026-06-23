@@ -20,8 +20,12 @@ PHP:
 - `./vendor/bin/phpunit --filter MethodOrClassName` — run a single test or test class.
 - `./vendor/bin/phpunit tests/Forms/FormCreationTest.php` — run one test file.
 - `composer fix` — apply PHP-CS-Fixer formatting (config: `.php-cs-fixer.dist.php`).
-- `composer update --classmap-authoritative && vendor/bin/phpstan analyze` — static analysis
-  (level 2, `src/` only; see `phpstan.neon.dist`).
+- `vendor/bin/phpstan analyse` — static analysis (level 2, `src/` only; see `phpstan.neon.dist`).
+  Provided by the `phpstan/phpstan` + `szepeviktor/phpstan-wordpress` dev deps; the config's
+  `phar://phpstan.phar/...` include resolves through the Composer-installed binary. Currently
+  reports a baseline of ~130 findings on the legacy code (mostly Illuminate contract drift and
+  `new static()`); it is **not yet clean**, so treat new errors — not the absolute count — as the
+  signal. (`composer update --classmap-authoritative` first, per `phpstan.neon.dist`, if needed.)
 
 JavaScript / TypeScript assets:
 - `yarn dev` / `yarn watch` / `yarn production` — Laravel Mix (webpack) builds into `dist/js`.
@@ -72,6 +76,27 @@ the Illuminate components they need (view factory, validation factory, events di
 constants (`WP_CONTENT_DIR`, etc.) and pulls in `tests/functions.php` which stubs WordPress functions,
 so tests run without a live WordPress install. `tests/deprecated` is excluded from the suite
 (`phpunit.xml.dist`). Per the contribution guide, **every PR must include unit tests**.
+
+CI runs on pull requests via `.github/workflows/tests.yml`: a `unit-test` job (PHP 8.1, the
+PHPUnit suite) and a non-blocking `static-analysis` job (PHPStan, `continue-on-error` while the
+legacy findings are cleaned up). `composer.lock` is gitignored, so CI resolves dependencies fresh
+from `composer.json` on each run.
+
+### Checklist for Complete Testing Workflow
+
+- [ ] **Analyze existing patterns** in similar test files
+- [ ] **Create comprehensive test coverage** for all methods and scenarios
+- [ ] **Extract magic strings** to constants in both source and test files
+- [ ] **Organize constants alphabetically** with descriptive names
+- [ ] **Create default test fixtures** for consistent setup
+- [ ] **Mock all dependencies** properly with verified method calls
+- [ ] **Test all error cases** and edge conditions
+- [ ] **Generate coverage reports** (`composer coverage`) to verify 100% method/line coverage
+- [ ] **Fix code style** with `composer fix` (PHP-CS-Fixer — this repo does not use phpcbf) before committing
+- [ ] **Create atomic commits** with descriptive messages
+- [ ] **Validate final implementation** with full test run (`composer test`)
+
+This workflow ensures high-quality, maintainable code with comprehensive test coverage and excellent development practices.
 
 ## Branching
 
