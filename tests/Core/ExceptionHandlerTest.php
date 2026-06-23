@@ -235,8 +235,8 @@ class ExceptionHandlerTest extends TestCase
         $file = $this->createMock(UploadedFile::class);
         $file->method('getPathname')->willReturn('photo.jpg');
         $file->method('getClientOriginalName')->willReturn('photo.jpg');
-        $file->method('getClientMimeType')->willReturn(null);
-        $file->method('getError')->willReturn(null);
+        $file->method('getClientMimeType')->willReturn('image/jpeg');
+        $file->method('getError')->willReturn(UPLOAD_ERR_OK);
 
         $request = Request::create('/', 'POST', $argumentExpected, [], ['photo' => $file]);
 

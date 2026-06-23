@@ -700,6 +700,14 @@ class RoutesTest extends TestCase
         $container->singleton(Registrar::class, function () use ($router) {
             return $router;
         });
+        $container->singleton(
+            \Illuminate\Routing\Contracts\CallableDispatcher::class,
+            fn ($app) => new \Illuminate\Routing\CallableDispatcher($app),
+        );
+        $container->singleton(
+            \Illuminate\Routing\Contracts\ControllerDispatcher::class,
+            fn ($app) => new \Illuminate\Routing\ControllerDispatcher($app),
+        );
 
         return $router;
     }
