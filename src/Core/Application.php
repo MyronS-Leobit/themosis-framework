@@ -46,7 +46,7 @@ class Application extends Container implements
      *
      * @var string
      */
-    public const VERSION = '8.0.0';
+    public const VERSION = '10.0.0';
 
     /**
      * Application textdomain.
@@ -544,6 +544,20 @@ class Application extends Container implements
     }
 
     /**
+     * Get the path to the public / web directory.
+     *
+     * Aliases the web path to satisfy the Illuminate application contract.
+     *
+     * @param string $path
+     *
+     * @return string
+     */
+    public function publicPath($path = '')
+    {
+        return $this->webPath($path);
+    }
+
+    /**
      * Get the root path of the project.
      *
      * @param string $path
@@ -739,6 +753,16 @@ class Application extends Container implements
     public function runningInConsole()
     {
         return php_sapi_name() == 'cli' || php_sapi_name() == 'phpdbg';
+    }
+
+    /**
+     * Determine if the application is running with debug mode enabled.
+     *
+     * @return bool
+     */
+    public function hasDebugModeEnabled()
+    {
+        return (bool) $this['config']->get('app.debug');
     }
 
     /**
@@ -1139,7 +1163,7 @@ class Application extends Container implements
      */
     public function runningUnitTests()
     {
-        return $this['env'] == 'testing';
+        return $this->bound('env') && $this['env'] === 'testing';
     }
 
     /**
@@ -1600,8 +1624,6 @@ class Application extends Container implements
      * Set the application fallback locale.
      *
      * @param string $fallbackLocale
-     *
-     * @return void
      */
     public function setFallbackLocale(string $fallbackLocale)
     {

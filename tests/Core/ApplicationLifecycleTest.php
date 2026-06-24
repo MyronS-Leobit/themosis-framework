@@ -204,6 +204,43 @@ class ApplicationLifecycleTest extends TestCase
         $this->assertFalse($app->runningUnitTests());
     }
 
+    public function testRunningUnitTestsReturnsFalseWhenEnvironmentIsNotBound()
+    {
+        // Laravel 10's Command::run() calls runningUnitTests() through
+        // ConfiguresPrompts before the 'env' binding exists; the method must
+        // not attempt to resolve an unbound 'env' from the container.
+        $app = $this->makeApplication();
+
+        $this->assertFalse($app->bound('env'));
+        $this->assertFalse($app->runningUnitTests());
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Debug mode and public path (Illuminate application contract)
+    |--------------------------------------------------------------------------
+    */
+
+    public function testHasDebugModeEnabledReflectsAppDebugConfig()
+    {
+        $app = $this->makeApplication();
+        $app->instance('config', new ConfigRepository(['app' => ['debug' => true]]));
+
+        $this->assertTrue($app->hasDebugModeEnabled());
+
+        $app->instance('config', new ConfigRepository(['app' => ['debug' => false]]));
+
+        $this->assertFalse($app->hasDebugModeEnabled());
+    }
+
+    public function testPublicPathAliasesWebPath()
+    {
+        $app = $this->makeApplication();
+
+        $this->assertSame($app->webPath(), $app->publicPath());
+        $this->assertSame($app->webPath('assets'), $app->publicPath('assets'));
+    }
+
     /*
     |--------------------------------------------------------------------------
     | registerConfiguredProviders

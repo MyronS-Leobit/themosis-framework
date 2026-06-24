@@ -1,17 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit
-    bootstrap="tests/bootstrap.php"
-    backupGlobals="false"
-    colors="true"
-    convertErrorsToExceptions="true"
-    convertNoticesToExceptions="true"
-    convertWarningsToExceptions="true"
-    processIsolation="false"
-    verbose="true">
-    <testsuites>
-        <testsuite name="Themosis framework">
-            <directory suffix="Test.php">./tests</directory>
-            <exclude>./tests/deprecated</exclude>
-        </testsuite>
-    </testsuites>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" bootstrap="tests/bootstrap.php" backupGlobals="false" colors="true" convertErrorsToExceptions="true" convertNoticesToExceptions="true" convertWarningsToExceptions="true" processIsolation="false" verbose="true" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
+  <testsuites>
+    <testsuite name="Themosis framework">
+      <directory suffix="Test.php">./tests</directory>
+      <exclude>./tests/deprecated</exclude>
+    </testsuite>
+  </testsuites>
 </phpunit>
